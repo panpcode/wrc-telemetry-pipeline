@@ -1,0 +1,6 @@
+# runtime data from docker compose
+mosquitto/data/
+mosquitto/log/
+db/data/
+
+.DS_Store
