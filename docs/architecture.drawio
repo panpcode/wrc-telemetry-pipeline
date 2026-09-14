@@ -1,0 +1,419 @@
+<mxfile host="drawio" version="24.7.17">
+  <diagram id="target-e2e" name="Project target (end to end)">
+    <mxGraphModel dx="2060" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2060" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t_title" value="&lt;b&gt;wrc-telemetry-pipeline: what we are building, end to end&lt;/b&gt;" style="text;html=1;fontSize=22;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="20" y="10" width="1200" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t_zone" value="docker compose up · one laptop" style="rounded=1;arcSize=2;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;verticalAlign=top;align=left;spacingLeft=12;fontStyle=1;fontSize=16;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="2000" height="700" as="geometry" />
+        </mxCell>
+
+        <!-- input -->
+        <mxCell id="t_gpx" value="&lt;b&gt;GPX route&lt;/b&gt;&lt;br&gt;a road used by the&lt;br&gt;Acropolis Rally" style="shape=note;size=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="130" width="170" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- THE CAR -->
+        <mxCell id="t_car" value="THE CAR" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=1;fontSize=14;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="240" y="95" width="640" height="615" as="geometry" />
+        </mxCell>
+        <mxCell id="t_simlabel" value="simulator (Rust)" style="text;html=1;fontSize=12;fontStyle=3;align=left;verticalAlign=middle;fontColor=#355c9a;" vertex="1" parent="1">
+          <mxGeometry x="260" y="105" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t_src" value="&lt;b&gt;Source&lt;/b&gt; (trait)&lt;br&gt;GpxSource now · CanSource (vcan0) later" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="130" width="340" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t_phys" value="&lt;b&gt;Car model&lt;/b&gt;&lt;br&gt;speed from road curvature → rpm, gear,&lt;br&gt;throttle, brake, brake temps, g-forces" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="215" width="340" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="t_stamp" value="&lt;b&gt;Stamp every sample&lt;/b&gt;: ts (car clock) + seq · 50 Hz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="305" width="340" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="t_pub" value="&lt;b&gt;MQTT publisher&lt;/b&gt;&lt;br&gt;QoS 1 · Last Will · keep alive&lt;br&gt;always connected: the broker is in the same car" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="390" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t_logw" value="&lt;b&gt;Logger writer&lt;/b&gt; (the data logger)&lt;br&gt;every sample at 50 Hz, never drops anything&lt;br&gt;writes one file per stage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="600" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="t_mqcar" value="&lt;b&gt;Mosquitto (in the car)&lt;/b&gt;&lt;br&gt;local broker, always reachable&lt;br&gt;persistence on disk&lt;br&gt;bridge: queues QoS 1 messages&lt;br&gt;while there is no signal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="365" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t_dash" value="&lt;b&gt;In-car dash (Rust, ratatui)&lt;/b&gt;&lt;br&gt;the driver's display&lt;br&gt;gear · rpm + shift lights · speed&lt;br&gt;brake / coolant warnings&lt;br&gt;link: 🟢 online / 🔴 offline, N queued&lt;br&gt;&lt;i&gt;keeps working in a dead zone&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="130" width="220" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- controls -->
+        <mxCell id="t_tunnel" value="&lt;b&gt;Dead zone&lt;/b&gt;&lt;br&gt;docker compose pause mosquitto-park&lt;br&gt;the bridge drops, the car keeps going" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="240" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t_bench" value="&lt;b&gt;Bench&lt;/b&gt;&lt;br&gt;1 / 5 / 20 cars at 50 Hz&lt;br&gt;sample created → row in DB&lt;br&gt;p50 / p95 / p99" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="130" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- service park: live path -->
+        <mxCell id="t_mq" value="&lt;b&gt;Mosquitto (service park)&lt;/b&gt;&lt;br&gt;:1883&lt;br&gt;rally/car-N/telemetry&lt;br&gt;rally/car-N/status (retained)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="370" width="210" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t_ing" value="&lt;b&gt;ingester (Go)&lt;/b&gt;&lt;br&gt;subscribe rally/+/telemetry and status&lt;br&gt;batch: every 100 ms or 500 rows&lt;br&gt;duplicates: ON CONFLICT DO NOTHING&lt;br&gt;gap counter · online/offline events&lt;br&gt;writes source = live" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="350" width="260" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- post-stage path -->
+        <mxCell id="t_logs" value="&lt;b&gt;logs/&lt;/b&gt; folder&lt;br&gt;car-1_SS3.mf4 / .csv&lt;br&gt;= download at service" style="shape=note;size=14;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="595" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t_imp" value="&lt;b&gt;importer (Python, asammdf)&lt;/b&gt;&lt;br&gt;reads .mf4 / .csv (MoTeC .ld later)&lt;br&gt;writes source = logger&lt;br&gt;then builds the stage report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="590" width="260" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- db -->
+        <mxCell id="t_db" value="&lt;b&gt;TimescaleDB&lt;/b&gt; · :5432&lt;br&gt;&lt;br&gt;&lt;b&gt;rallies, stages&lt;/b&gt;&lt;br&gt;&lt;b&gt;cars&lt;/b&gt; (with driver)&lt;br&gt;&lt;br&gt;&lt;b&gt;samples&lt;/b&gt; (hypertable)&lt;br&gt;car, stage, source, seq, ts,&lt;br&gt;speed, rpm, gear, temps, lat, lon …&lt;br&gt;source = live | logger&lt;br&gt;&lt;br&gt;&lt;b&gt;gaps&lt;/b&gt;: missing seq ranges&lt;br&gt;&lt;b&gt;car_status&lt;/b&gt;: online / offline events" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=14;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="350" width="240" height="320" as="geometry" />
+        </mxCell>
+
+        <!-- grafana -->
+        <mxCell id="t_graf" value="&lt;b&gt;Grafana&lt;/b&gt; · :3000&lt;br&gt;&lt;br&gt;&lt;b&gt;Stage analysis&lt;/b&gt;&lt;br&gt;driver vs driver on the same stage,&lt;br&gt;where time is lost&lt;br&gt;&lt;br&gt;&lt;b&gt;Live stage&lt;/b&gt;&lt;br&gt;car on the map, speed / rpm,&lt;br&gt;online / offline, gaps&lt;br&gt;&lt;br&gt;&lt;b&gt;Post-stage&lt;/b&gt;&lt;br&gt;live vs logger overlay,&lt;br&gt;% of data lost live&lt;br&gt;&lt;br&gt;&lt;b&gt;Alert&lt;/b&gt;: brakes too hot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="320" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="t_you" value="&lt;b&gt;You&lt;/b&gt;&lt;br&gt;browser · localhost:3000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="670" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- edges inside the car -->
+        <mxCell id="t_e0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="t_gpx" target="t_src">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="t_src" target="t_phys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="t_phys" target="t_stamp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e3" value="live" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#dae8fc;exitX=0.65;exitY=1;" edge="1" parent="1" source="t_stamp" target="t_pub">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e4" value="publish" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#dae8fc;" edge="1" parent="1" source="t_pub" target="t_mqcar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e4b" value="subscribe" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#dae8fc;" edge="1" parent="1" source="t_mqcar" target="t_dash">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e5" value="every&lt;br&gt;sample" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#9673a6;fontSize=10;labelBackgroundColor=#dae8fc;exitX=0.03;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="t_stamp" target="t_logw">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="635" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- car -> service park -->
+        <mxCell id="t_e6" value="bridge&lt;br&gt;QoS 1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="t_mqcar" target="t_mq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1" source="t_mq" target="t_ing">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e8" value="batch&lt;br&gt;INSERT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="t_ing" target="t_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e9" style="html=1;endArrow=none;dashed=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="t_tunnel" target="t_mq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e10" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=none;dashed=1;strokeColor=#d6b656;strokeWidth=1;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="t_bench" target="t_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- post-stage path edges -->
+        <mxCell id="t_e11" value="end of stage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#9673a6;fontSize=10;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="t_logw" target="t_logs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1" source="t_logs" target="t_imp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e13" value="batch&lt;br&gt;INSERT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#9673a6;fontSize=10;labelBackgroundColor=#f5f5f5;exitX=1;exitY=0.5;entryX=0;entryY=0.85;" edge="1" parent="1" source="t_imp" target="t_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- db -> grafana -> you -->
+        <mxCell id="t_e14" value="SQL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;fontSize=10;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="t_db" target="t_graf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t_e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="t_graf" target="t_you">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- real-world mapping -->
+        <mxCell id="t_map" value="&lt;b&gt;What each part plays in the real world&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;simulator + Mosquitto (in the car) + dash&lt;/b&gt; = the car: sensors, data logger, local network, driver's display&lt;br&gt;• &lt;b&gt;the bridge&lt;/b&gt; = the mobile network · pausing the service park broker = a dead zone in the mountains&lt;br&gt;• &lt;b&gt;Mosquitto (service park) + ingester + TimescaleDB + Grafana&lt;/b&gt; = the service park&lt;br&gt;• &lt;b&gt;logs/ + importer&lt;/b&gt; = downloading the logger at service. This is what WRC teams actually do, since live telemetry to the team is not allowed during events.&lt;br&gt;• &lt;b&gt;live path&lt;/b&gt; = closest to safety tracking and testing&lt;br&gt;• &lt;b&gt;later&lt;/b&gt;: Kafka and cloud (see page “Real rally (concept)”)" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=12;spacingTop=8;spacingRight=12;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="20" y="780" width="2000" height="170" as="geometry" />
+        </mxCell>
+
+
+        <!-- legend -->
+        <mxCell id="t_lg" value="&lt;b&gt;Legend&lt;/b&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;verticalAlign=top;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="970" width="2000" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t_lg1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1010" as="sourcePoint" />
+            <mxPoint x="120" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t_lg1t" value="live path: car → MQTT → ingester (can have gaps, late data, duplicates)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1000" width="600" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t_lg2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#9673a6;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1035" as="sourcePoint" />
+            <mxPoint x="120" y="1035" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t_lg2t" value="post-stage path: logger file → importer (complete, arrives after the stage)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1025" width="600" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t_lg3" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#b85450;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="1060" as="sourcePoint" />
+            <mxPoint x="120" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t_lg3t" value="test controls: dead zone (red), latency bench (yellow) · orange box = the driver's display" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1050" width="700" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="real-rally" name="Real rally (concept)">
+    <mxGraphModel dx="1720" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1720" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="&lt;b&gt;WRC telemetry: how it could look at a real rally&lt;/b&gt; (concept)" style="text;html=1;fontSize=22;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="20" y="10" width="1000" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 1: CAR -->
+        <mxCell id="zCar" value="1. IN THE CAR (edge)" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontStyle=1;fontSize=16;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="440" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="carHw" value="&lt;b&gt;Hardware:&lt;/b&gt; rugged ARM computer · 12V · vibration, dust, -20 to +70°C&lt;br&gt;&lt;b&gt;OS:&lt;/b&gt; embedded Linux (Yocto or minimal Debian), read-only root filesystem" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;dashed=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="400" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sensors" value="&lt;b&gt;Sensors&lt;/b&gt;&lt;br&gt;ECU via CAN bus: speed, rpm, gear, throttle, boost&lt;br&gt;GPS · IMU (g-forces) · brake and coolant temperatures" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="400" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="&lt;b&gt;Telemetry agent (Rust)&lt;/b&gt; = our simulator&lt;br&gt;samples at 50 Hz · stamps ts (car clock) + seq&lt;br&gt;JSON → MQTT, QoS 1, topic rally/car-1/telemetry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mqLocal" value="&lt;b&gt;Mosquitto (local broker)&lt;/b&gt;&lt;br&gt;bridge → service park · persistence on disk&lt;br&gt;keeps QoS 1 messages while there is no signal,&lt;br&gt;sends them when the connection comes back" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="400" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="logger" value="&lt;b&gt;Data logger&lt;/b&gt;&lt;br&gt;all channels, full rate&lt;br&gt;downloaded after the stage / at service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="540" width="190" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="modem" value="&lt;b&gt;4G/5G modem&lt;/b&gt;&lt;br&gt;dual SIM (two operators)&lt;br&gt;+ satellite backup for position / SOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="540" width="190" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="carNote" value="The car never talks to the cloud directly. Everything goes through its local broker, which is always up. The driver's dash reads from it too, so it keeps working with no signal." style="text;html=1;whiteSpace=wrap;fontSize=11;fontStyle=2;align=left;" vertex="1" parent="1">
+          <mxGeometry x="40" y="650" width="400" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- NETWORK -->
+        <mxCell id="net" value="&lt;b&gt;Mobile network&lt;/b&gt;&lt;br&gt;dead zones in the mountains,&lt;br&gt;valleys, forests" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="475" y="390" width="200" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 2: SERVICE PARK -->
+        <mxCell id="zPark" value="2. SERVICE PARK (team truck)" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;fontStyle=1;fontSize=16;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="690" y="60" width="460" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="parkHw" value="&lt;b&gt;Hardware:&lt;/b&gt; 1-2 servers in a rack (or a strong mini-PC)&lt;br&gt;&lt;b&gt;OS:&lt;/b&gt; Ubuntu Server · Docker Compose or k3s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="710" y="100" width="420" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mqCentral" value="&lt;b&gt;Mosquitto (central broker)&lt;/b&gt;&lt;br&gt;all cars connect here&lt;br&gt;Last Will → rally/car-N/status = offline (retained)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="190" width="420" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="ingester" value="&lt;b&gt;Ingester (Go)&lt;/b&gt;&lt;br&gt;subscribes rally/+/telemetry · drops duplicates on (car, seq)&lt;br&gt;batch writes: every 100 ms or 500 rows&lt;br&gt;counts missing seq · brake temperature alerts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="710" y="310" width="420" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="tsdb" value="&lt;b&gt;TimescaleDB&lt;/b&gt;&lt;br&gt;Postgres + hypertables&lt;br&gt;PK (car, seq)&lt;br&gt;ON CONFLICT DO NOTHING" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="710" y="440" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="grafLocal" value="&lt;b&gt;Grafana&lt;/b&gt;&lt;br&gt;car on the map, speed / rpm / temps, alerts&lt;br&gt;on the local network" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="440" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="laptops" value="&lt;b&gt;Engineers' laptops&lt;/b&gt;&lt;br&gt;keep working even if the internet&lt;br&gt;to the outside world is down" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="580" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uplink" value="&lt;b&gt;Uplink:&lt;/b&gt; Starlink + 4G&lt;br&gt;service parks are often in places with poor internet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="710" y="700" width="420" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 3: CLOUD / HQ -->
+        <mxCell id="zCloud" value="3. CLOUD + HQ (e.g. offices in Jyväskylä, Finland)" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;fontStyle=1;fontSize=16;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="60" width="530" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="cloudHw" value="&lt;b&gt;Managed services&lt;/b&gt; on AWS / GCP / Azure&lt;br&gt;nobody has to maintain servers on the road" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;dashed=1;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="100" width="490" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka" value="&lt;b&gt;MQTT broker → Kafka&lt;/b&gt;&lt;br&gt;AWS IoT Core / HiveMQ / EMQX → AWS MSK / Confluent&lt;br&gt;one stream, many consumers · replay a whole stage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="190" width="490" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cIngest" value="&lt;b&gt;Cloud ingester&lt;/b&gt;&lt;br&gt;same Go code,&lt;br&gt;different config" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="310" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cAlerts" value="&lt;b&gt;Alerts&lt;/b&gt;&lt;br&gt;notifications to&lt;br&gt;engineers' phones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="310" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cArchiver" value="&lt;b&gt;Archiver&lt;/b&gt;&lt;br&gt;writes raw data&lt;br&gt;as Parquet files" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="310" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cDb" value="&lt;b&gt;Timescale Cloud / ClickHouse Cloud&lt;/b&gt;&lt;br&gt;every rally, fast queries" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="440" width="235" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="&lt;b&gt;S3 + Parquet&lt;/b&gt;&lt;br&gt;cheap archive of every stage,&lt;br&gt;every season" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1445" y="440" width="235" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="grafCloud" value="&lt;b&gt;Grafana Cloud&lt;/b&gt;&lt;br&gt;the same dashboards as the service park" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="580" width="235" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="analytics" value="&lt;b&gt;Analytics and ML&lt;/b&gt;&lt;br&gt;driver comparison · tyre wear&lt;br&gt;setup for the next stage / next year" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1445" y="580" width="235" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="remote" value="&lt;b&gt;Remote engineering room (HQ)&lt;/b&gt;&lt;br&gt;engineers help from the office, without travelling to every rally" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="700" width="490" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES: car -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1" source="sensors" target="agent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="publish (QoS 1)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#dae8fc;" edge="1" parent="1" source="agent" target="mqLocal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1" source="mqLocal" target="modem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=1 3;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sensors" target="logger">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="28" y="215" />
+              <mxPoint x="28" y="585" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EDGES: car -> network -> service park -->
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;exitX=1;exitY=0.5;" edge="1" parent="1" source="modem" target="net">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="MQTT bridge&lt;br&gt;QoS 1 · TLS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="net" target="mqCentral">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="download at service (USB / Ethernet)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=1 3;fontSize=10;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="logger" target="tsdb">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="800" />
+              <mxPoint x="700" y="800" />
+              <mxPoint x="700" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EDGES: service park -->
+        <mxCell id="e8" value="subscribe" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#d5e8d4;" edge="1" parent="1" source="mqCentral" target="ingester">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="batch insert" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;fontSize=10;labelBackgroundColor=#d5e8d4;" edge="1" parent="1" source="ingester" target="tsdb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="SQL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;fontSize=10;labelBackgroundColor=#d5e8d4;" edge="1" parent="1" source="tsdb" target="grafLocal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="grafLocal" target="laptops">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES: service park -> cloud -->
+        <mxCell id="e12" value="bridge via Starlink / 4G&lt;br&gt;store-and-forward" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;dashed=1;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mqCentral" target="kafka">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES: cloud -->
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;exitX=0.155;exitY=1;" edge="1" parent="1" source="kafka" target="cIngest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1" source="kafka" target="cAlerts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;exitX=0.845;exitY=1;" edge="1" parent="1" source="kafka" target="cArchiver">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1" source="cIngest" target="cDb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#1f5fbf;dashed=1;" edge="1" parent="1" source="cArchiver" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" value="SQL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;fontSize=10;labelBackgroundColor=#fff2cc;" edge="1" parent="1" source="cDb" target="grafCloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="s3" target="analytics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="grafCloud" target="remote">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=1;strokeColor=#333333;" edge="1" parent="1" source="analytics" target="remote">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- LEGEND -->
+        <mxCell id="legend" value="&lt;b&gt;Legend&lt;/b&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;verticalAlign=top;align=left;spacingLeft=10;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="840" width="640" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="lg1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#1f5fbf;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="880" as="sourcePoint" />
+            <mxPoint x="120" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg1t" value="live data (MQTT, QoS 1)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="870" width="400" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#1f5fbf;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="910" as="sourcePoint" />
+            <mxPoint x="120" y="910" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg2t" value="store-and-forward / bulk (can arrive late, in bursts)" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="900" width="400" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg3" style="endArrow=block;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=1 3;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="940" as="sourcePoint" />
+            <mxPoint x="120" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg3t" value="offline download, after the stage" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="930" width="400" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg4t" value="dashed box = hardware / OS / infrastructure info" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="955" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- CAVEAT -->
+        <mxCell id="caveat" value="&lt;b&gt;⚠ Regulations&lt;/b&gt;&lt;br&gt;As far as I know, WRC teams don't get live telemetry from the car during a stage. The data is downloaded from the logger afterwards. Live data during the stage goes to the organiser's safety tracking system (GPS, speed, SOS). So this design fits safety tracking or testing best. Check the FIA sporting regulations.&lt;br&gt;&lt;i&gt;This is a concept, not how any real team does it.&lt;/i&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;spacingRight=10;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="840" width="1010" height="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>
