@@ -21,6 +21,10 @@ services:
       - "5432:5432"
     volumes:
       - ./db/data:/var/lib/postgresql/data
+      # mounted file by file: mounting the whole folder would hide the
+      # image's own TimescaleDB setup scripts in /docker-entrypoint-initdb.d
+      - ./db/init/001_schema.sql:/docker-entrypoint-initdb.d/101_schema.sql:ro
+      - ./db/init/002_seed.sql:/docker-entrypoint-initdb.d/102_seed.sql:ro
 
   grafana:
     image: grafana/grafana:latest
